@@ -8,6 +8,7 @@ module SpecInfra
       def run_command(cmd, opts={})
         cmd = build_command(cmd)
         cmd = add_pre_command(cmd)
+        cmd = add_command_prefix(cmd)
         stdout = run_with_no_ruby_environment do
           `#{build_command(cmd)} 2>&1`
         end
@@ -47,6 +48,13 @@ module SpecInfra
         if SpecInfra.configuration.pre_command
           cmd = "#{SpecInfra.configuration.pre_command} && #{cmd}"
           cmd = "env PATH=#{path}:$PATH #{cmd}" if path
+        end
+        cmd
+      end
+
+      def add_command_prefix(cmd)
+        if SpecInfra.configuration.command_prefix
+          cmd = "#{SpecInfra.configuration.command_prefix} #{cmd}"
         end
         cmd
       end

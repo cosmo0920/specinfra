@@ -4,6 +4,7 @@ module SpecInfra
       VALID_OPTIONS_KEYS = [
         :path,
         :pre_command,
+        :command_prefix,
         :stdout,
         :stderr,
         :sudo_path,

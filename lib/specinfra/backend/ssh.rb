@@ -6,6 +6,7 @@ module SpecInfra
       def run_command(cmd, opt={})
         cmd = build_command(cmd)
         cmd = add_pre_command(cmd)
+        cmd = add_command_prefix(cmd)
         ret = ssh_exec!(cmd)
 
         ret[:stdout].gsub!(/\r\n/, "\n")
@@ -39,6 +40,10 @@ module SpecInfra
           cmd = "#{sudo} #{cmd}"
         end
         cmd
+      end
+
+      def add_command_prefix(cmd)
+        super(cmd)
       end
 
       def copy_file(from, to)

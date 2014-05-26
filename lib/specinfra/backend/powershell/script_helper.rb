@@ -33,6 +33,20 @@ EOF
           cmd
         end
 
+        def add_command_prefix(cmd)
+          if SpecInfra.configuration.command_prefix
+            cmd.strip!
+            cmd =
+<<-EOF
+if (#{SpecInfra.configuration.command_prefix})
+{
+#{cmd}
+}
+EOF
+          end
+          cmd
+        end
+
         def encode_script script
           script_text = script.chars.to_a.join("\x00").chomp
           script_text << "\x00" unless script_text[-1].eql? "\x00"
@@ -51,6 +65,7 @@ EOF
             ps_functions = command.import_functions.map { |f| File.read(File.join(File.dirname(__FILE__), 'support', f)) }
             script = build_command(command.script)
             script = add_pre_command(script)
+            script = add_command_prefix(script)
             <<-EOF
 $exitCode = 1
 $ProgressPreference = "SilentlyContinue"
@@ -67,6 +82,7 @@ exit $exitCode
           else
             script = build_command(command.to_s)
             add_pre_command(script)
+            add_command_prefix(script)
           end
         end
 
