@@ -22,6 +22,14 @@ module SpecInfra
         end
       end
 
+      def check_installed_by_yaourt(package,version=nil)
+        if version
+          "yaourt -Q | grep #{escape(package)} #{escape(version)}"
+        else
+          "yaourt -Q | grep #{escape(package)}"
+        end
+      end
+
       def sync_repos
         "pacman -Syy"
       end
